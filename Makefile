@@ -13,6 +13,9 @@ all: $(PRODUCTS) ## Build all container images
 $(PRODUCTS):
 	$(DOCKER) build --file Dockerfile.$@ --tag $(TAG_PREFIX)/$@ .
 
+files/chrome.json:
+	curl -L -o $@ https://raw.githubusercontent.com/jessfraz/dotfiles/master/etc/docker/seccomp/chrome.json
+
 clean: ## Prune container images
 	$(DOCKER) image prune --force
 	$(DOCKER) system prune --force

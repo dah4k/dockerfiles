@@ -9,9 +9,12 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.chromium
+    security_opt:
+      - seccomp:files/chrome.json
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix:ro
       - /dev/shm:/dev/shm
+      - /dev/dri:/dev/dri
     environment:
       - DISPLAY=:0
 
