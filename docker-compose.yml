@@ -1,0 +1,36 @@
+# Copyright 2024 dah4k
+# SPDX-License-Identifier: MIT-0
+
+---
+services:
+
+  chromium:
+    image: local/chromium
+    build:
+      context: .
+      dockerfile: Dockerfile.chromium
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix:ro
+      - /dev/shm:/dev/shm
+    environment:
+      - DISPLAY=:0
+
+  firefox:
+    image: local/firefox
+    build:
+      context: .
+      dockerfile: Dockerfile.firefox
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix:ro
+    environment:
+      - DISPLAY=:0
+
+  torbrowser:
+    image: local/torbrowser
+    build:
+      context: .
+      dockerfile: Dockerfile.torbrowser
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix:ro
+    environment:
+      - DISPLAY=:0

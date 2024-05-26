@@ -1,0 +1,32 @@
+# Copyright 2024 dah4k
+# SPDX-License-Identifier: MIT-0
+
+FROM debian:12-slim AS Installer
+
+ARG TZ=Etc/UTC
+ARG DEBIAN_FRONTEND=noninteractive
+RUN apt-get update \
+    && apt-get install --assume-yes --no-install-recommends \
+        ca-certificates \
+        chromium \
+        chromium-sandbox \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+## See https://systemd.io/BUILDING_IMAGES/
+RUN rm -f /etc/machine-id \
+    && rm -f /var/lib/systemd/random-seed \
+    && rm -f /loader/random-seed \
+    && rm -f /etc/hostname \
+    && rm -f /etc/machine-info \
+    && rm -f /var/lib/systemd/credential.secret
+
+## Create kali user
+RUN useradd --create-home --user-group --uid 1000 kali \
+    && chown -R kali:kali /home/kali
+
+## Run as kali user
+USER kali
+WORKDIR /home/kali
+
+ENTRYPOINT [ "/usr/bin/chromium" ]
