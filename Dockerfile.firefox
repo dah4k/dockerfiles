@@ -9,6 +9,12 @@ RUN apt-get update \
     && apt-get install --assume-yes --no-install-recommends \
         ca-certificates \
         firefox-esr \
+        fonts-liberation \
+        fonts-roboto \
+        libegl1 \
+        libgl1-mesa-dri \
+        libgl1-mesa-glx \
+        libpci3 \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 

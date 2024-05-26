@@ -25,6 +25,7 @@ services:
       dockerfile: Dockerfile.firefox
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix:ro
+      - /dev/dri:/dev/dri
     environment:
       - DISPLAY=:0
 
