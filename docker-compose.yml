@@ -4,6 +4,12 @@
 ---
 services:
 
+  javadev:
+    image: local/javadev
+    build:
+      context: .
+      dockerfile: Dockerfile.javadev
+
   chromium:
     image: local/chromium
     build:

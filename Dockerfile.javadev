@@ -1,0 +1,35 @@
+# Copyright 2024 dah4k
+# SPDX-License-Identifier: MIT-0
+
+FROM opensuse/tumbleweed
+
+WORKDIR /opt
+
+ARG CODEQL_URL=https://github.com/github/codeql-action/releases/download/codeql-bundle-v2.17.0/codeql-bundle-linux64.tar.gz
+ARG CODEQL_SHA256=056f9aefb53523d56fc2cc3961be003ac74f729e093c4defcf40b3eeac3d87f8
+RUN curl -L -O ${CODEQL_URL} \
+ && echo "${CODEQL_SHA256}  codeql-bundle-linux64.tar.gz" | sha256sum -c - \
+ && tar -xzf codeql-bundle-linux64.tar.gz \
+ && rm codeql-bundle-linux64.tar.gz
+
+RUN zypper --quiet --non-interactive refresh \
+ && zypper --quiet --non-interactive install \
+    ctags \
+    fd \
+    git \
+    java-21-openjdk-devel \
+    maven \
+    ripgrep \
+    vim \
+    vim-data \
+ && zypper --quiet --non-interactive clean
+
+WORKDIR /root
+
+RUN git clone https://github.com/dah4k/FizzBuzzEnterpriseEdition \
+ && cd FizzBuzzEnterpriseEdition \
+ && git checkout java21
+
+RUN /opt/codeql/codeql database create codeql-db --language=java --command="mvn compile test-compile" --source-root="/root/FizzBuzzEnterpriseEdition"
+RUN /opt/codeql/codeql database analyze --format=csv --output="codeql-results.csv" codeql-db codeql/java-queries
+RUN /opt/codeql/codeql database analyze --format=sarif-latest --output="codeql-results.sarif" codeql-db codeql/java-queries
