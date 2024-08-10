@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: MIT-0
 
 DOCKER      ?= docker
-PRODUCTS    ?= chromium firefox torbrowser
+PRODUCTS    ?= chromium firefox torbrowser libreoffice
 TAG_PREFIX  ?= local
 
 _ANSI_NORM  := \033[0m
