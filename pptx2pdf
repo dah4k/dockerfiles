@@ -1,0 +1,22 @@
+#!/bin/sh
+# Copyright 2024 dah4k
+# SPDX-License-Identifier: MIT-0
+
+if [ $# != 1 ]; then
+    echo "USAGE: $0 INPUT_1.pptx"
+    exit 1
+fi
+
+input_fullpath="$1"
+output_fullpath="${input_fullpath/.pptx/.pdf}"
+tempdir=$(mktemp -d)
+
+cleanup()
+{
+    rm -rf $tempdir
+}
+trap cleanup EXIT
+
+cp "$input_fullpath" "$tempdir/document.pptx"
+docker run --rm -ti --volume $tempdir:/datatmp local/libreoffice /usr/bin/libreoffice --headless --invisible --convert-to pdf "document.pptx"
+mv "$tempdir/document.pdf" "$output_fullpath"
